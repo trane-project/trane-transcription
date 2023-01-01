@@ -1,0 +1,15 @@
+{
+    "asset": {
+        "Track": {
+            "short_id": "zombie_girl",
+            "track_name": "zombie girl",
+            "artist_name": "Adrianne Lenker",
+            "album_name": "songs",
+            "external_link": "https://www.youtube.com/watch?v=4Mkj4tXsI7E"
+        }
+    },
+    "intervals": {
+        "0": ["0:01.24", "0:08.70"],
+        "1": ["0:12.37", "0:31.00"]
+    }
+}
