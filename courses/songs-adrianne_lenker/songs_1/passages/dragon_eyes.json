@@ -1,0 +1,17 @@
+{
+    "asset": {
+        "Track": {
+            "short_id": "dragon_eyes",
+            "track_name": "dragon eyes",
+            "artist_name": "Adrianne Lenker",
+            "album_name": "songs",
+            "external_link": "https://www.youtube.com/watch?v=h8Pv04Tj5GE"
+        }
+    },
+    "intervals": {
+        "0": ["0:00.26", "0:11.77"],
+        "1": ["0:11.77", "0:23.28"],
+        "2": ["1:30.34", "1:37.97"],
+        "3": ["2:24.29", "2:41.52"]
+    }
+}
