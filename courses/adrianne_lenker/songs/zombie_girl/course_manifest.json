@@ -1,8 +1,8 @@
 {
-  "id": "trane::music::transcription::adrianne_lenker::songs_1",
-  "name": "Adrianne Lenker - songs 1",
+  "id": "trane::music::transcription::adrianne_lenker::songs::zombie_girl",
+  "name": "Adrianne Lenker - songs - zombie girl",
   "dependencies": [],
-  "description": "First course on the album 'songs' by Adrianne Lenker",
+  "description": "Transcription course for the song zombie girl by Adrianne Lenker",
   "authors": [
     "The Trane Project"
   ],

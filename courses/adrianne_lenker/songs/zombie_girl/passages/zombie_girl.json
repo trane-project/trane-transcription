@@ -2,17 +2,17 @@
     "asset": {
         "Track": {
             "short_id": "zombie_girl",
-            "track_name": "zombie girl",
             "artist_name": "Adrianne Lenker",
             "album_name": "songs",
+            "track_name": "zombie girl",
             "external_link": "https://www.youtube.com/watch?v=4Mkj4tXsI7E"
         }
     },
     "intervals": {
-        "0": ["0:01.28", "0:08.72"],
-        "1": ["0:12.45", "0:31.08"],
-        "2": ["0:47.55", "1:00.84"],
-        "3": ["1:00.84", "1:14.00"],
-        "4": ["2:09.78", "2:33.15"]
+        "1": ["0:01.25", "0:30.28"],
+        "2": ["0:30.28", "0:53.19"],
+        "3": ["0:53.19", "1:13.89"],
+        "4": ["1:13.89", "1:48.33"],
+        "5": ["2:09.78", "2:33.15"]
     }
 }
