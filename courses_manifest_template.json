@@ -7,10 +7,10 @@
     ],
     "metadata": {
         "course_series": [
-            "trane-transcription"
+            "trane_transcription"
         ],
         "transcription_genre": [
-            "the-genre"
+            "the_genre"
         ]
     },
     "generator_config": {
