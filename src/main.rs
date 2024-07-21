@@ -13,12 +13,32 @@ use ustr::Ustr;
 
 /// Creates a new course with the basic details filled in.
 fn create_course(id: &str) -> Result<()> {
+    // Check the required courses are available.
+    let root = std::env::current_dir()?.join("courses");
+    if !root.exists() {
+        bail!("courses directory does not exist at {}", root.display());
+    }
+    let directory = if id.starts_with("trane::transcription::") {
+        let path = id
+            .trim_start_matches("trane::transcription::")
+            .split("::")
+            .collect::<Vec<_>>()
+            .join("/");
+        root.join(path)
+    } else {
+        let path = id.split("::").collect::<Vec<_>>().join("/");
+        root.join(path)
+    };
+    if directory.exists() {
+        bail!("course already exists at {}", directory.display());
+    }
+
+    // Generate the course manifest.
     let course_id = if id.starts_with("trane::transcription::") {
         Ustr::from(id)
     } else {
         Ustr::from(&format!("trane::transcription::{id}"))
     };
-
     let course_manifest = CourseManifestBuilder::default()
         .id(course_id)
         .generator_config(Some(CourseGenerator::Transcription(TranscriptionConfig {
