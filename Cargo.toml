@@ -9,6 +9,6 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = "1.0.66"
-# trane = "0.21.1"
+trane = "0.21.1"
 # Commented out for use in local development.
-trane = { path = "../trane" }
+# trane = { path = "../trane" }
