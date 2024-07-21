@@ -1,10 +1,12 @@
 //! Command line tool with utilities to make working with the courses in this repository easier.
 
+use std::{collections::BTreeMap, fs, vec};
+
 use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
 use trane::{
     data::{
-        course_generator::transcription::TranscriptionConfig, CourseGenerator, CourseManifest,
+        course_generator::transcription::TranscriptionConfig, CourseGenerator,
         CourseManifestBuilder,
     },
     Trane,
@@ -41,6 +43,11 @@ fn create_course(id: &str) -> Result<()> {
     };
     let course_manifest = CourseManifestBuilder::default()
         .id(course_id)
+        .authors(Some(vec!["The Trane Project".to_string()]))
+        .metadata(Some(BTreeMap::from([(
+            "course_series".to_string(),
+            vec!["trane_transcription".to_string()],
+        )])))
         .generator_config(Some(CourseGenerator::Transcription(TranscriptionConfig {
             transcription_dependencies: vec![],
             passage_directory: "".to_string(),
@@ -51,10 +58,22 @@ fn create_course(id: &str) -> Result<()> {
         .build()
         .with_context(|| "failed to build course manifest")?;
 
+    // Create the directory and Write the course manifest.
+    fs::create_dir_all(&directory).with_context(|| {
+        format!(
+            "failed to create course directory at {}",
+            directory.display()
+        )
+    })?;
+    let manifest_path = directory.join("course_manifest.json");
     let pretty_json = serde_json::to_string_pretty(&course_manifest)
         .with_context(|| "invalid course manifest")?;
-    // fs::write(&path, pretty_json)
-    //     .with_context(|| format!("failed to write metadata to {}", path.display()))?;
+    fs::write(&manifest_path, pretty_json).with_context(|| {
+        format!(
+            "failed to write course metadata to {}",
+            manifest_path.display()
+        )
+    })?;
     Ok(())
 }
 
