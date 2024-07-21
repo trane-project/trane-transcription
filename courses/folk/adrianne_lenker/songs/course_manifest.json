@@ -1,0 +1,49 @@
+{
+    "id": "trane::transcription::folk::adrianne_lenker::songs",
+    "name": "Adrianne Lenker - songs",
+    "dependencies": [],
+    "authors": [
+        "The Trane Project"
+    ],
+    "metadata": {
+        "course_series": [
+            "trane-transcription"
+        ],
+        "transcription_genre": [
+            "jazz"
+        ]
+    },
+    "generator_config": {
+        "Transcription": {
+            "transcription_dependencies": [],
+            "inlined_passages": [
+                {
+                    "asset": {
+                        "Track": {
+                            "short_id": "dragon_eyes",
+                            "artist_name": "Adrianne Lenker",
+                            "album_name": "songs",
+                            "track_name": "dragon eyes",
+                            "external_link": {
+                                "YouTube": "https://www.youtube.com/watch?v=h8Pv04Tj5GE"
+                            }
+                        }
+                    }
+                },
+                {
+                    "asset": {
+                        "Track": {
+                            "short_id": "zombie_girl",
+                            "artist_name": "Adrianne Lenker",
+                            "album_name": "songs",
+                            "track_name": "zombie girl",
+                            "external_link": {
+                                "YouTube": "https://www.youtube.com/watch?v=4Mkj4tXsI7E"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "id": "trane::transcription::the_id",
+    "name": "Course Name",
+    "dependencies": [],
+    "authors": [
+        "The Trane Project"
+    ],
+    "metadata": {
+        "course_series": [
+            "trane-transcription"
+        ],
+        "transcription_genre": [
+            "the-genre"
+        ]
+    },
+    "generator_config": {
+        "Transcription": {
+            "transcription_dependencies": [],
+            "inlined_passages": [
+                {
+                    "asset": {
+                        "Track": {
+                            "short_id": "short_id",
+                            "artist_name": "Artist Name",
+                            "album_name": "Album Name",
+                            "track_name": "Track Name",
+                            "external_link": {
+                                "YouTube": "https://www.youtube.com/watch?v=XXXX"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
