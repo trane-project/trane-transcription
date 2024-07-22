@@ -4,6 +4,7 @@ use std::{collections::BTreeMap, fs, vec};
 
 use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
+use serde::ser::Serialize;
 use trane::{
     data::{
         course_generator::transcription::TranscriptionConfig, CourseGenerator,
@@ -58,17 +59,21 @@ fn create_course(id: &str) -> Result<()> {
         .build()
         .with_context(|| "failed to build course manifest")?;
 
-    // Create the directory and Write the course manifest.
+    // Create the directory and write the course manifest.
     fs::create_dir_all(&directory).with_context(|| {
         format!(
             "failed to create course directory at {}",
             directory.display()
         )
     })?;
+    let formatter = serde_json::ser::PrettyFormatter::with_indent(b"    ");
+    let mut buf = Vec::new();
+    let mut ser = serde_json::Serializer::with_formatter(&mut buf, formatter);
+    course_manifest
+        .serialize(&mut ser)
+        .with_context(|| "failed to serialize repository metadata")?;
     let manifest_path = directory.join("course_manifest.json");
-    let pretty_json = serde_json::to_string_pretty(&course_manifest)
-        .with_context(|| "invalid course manifest")?;
-    fs::write(&manifest_path, pretty_json).with_context(|| {
+    fs::write(&manifest_path, buf).with_context(|| {
         format!(
             "failed to write course metadata to {}",
             manifest_path.display()
@@ -96,7 +101,10 @@ pub(crate) struct TranscriptionCLI {
 pub(crate) enum Subcommands {
     #[clap(about = "Create a new transcription course")]
     New {
-        #[clap(help = "The id of the course to create without the trane::transcription:: prefix")]
+        #[clap(
+            help = "The id of the course to create with or without the trane::transcription:: \
+            prefix"
+        )]
         id: String,
     },
 
