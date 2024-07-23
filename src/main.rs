@@ -6,9 +6,12 @@ use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
 use serde::ser::Serialize;
 use trane::{
+    course_library::CourseLibrary,
     data::{
-        course_generator::transcription::TranscriptionConfig, CourseGenerator,
-        CourseManifestBuilder,
+        course_generator::transcription::{
+            TranscriptionAsset, TranscriptionConfig, TranscriptionLink,
+        },
+        CourseGenerator, CourseManifestBuilder,
     },
     Trane,
 };
@@ -36,7 +39,7 @@ fn create_course(id: &str) -> Result<()> {
         bail!("course already exists at {}", directory.display());
     }
 
-    // Generate the course manifest.
+    // Generate the course manifest with the required fields filled in.
     let course_id = if id.starts_with("trane::transcription::") {
         Ustr::from(id)
     } else {
@@ -84,7 +87,71 @@ fn create_course(id: &str) -> Result<()> {
 
 /// Verifies that all transcription courses are valid.
 fn verify_courses() -> Result<()> {
+    // Open the trane-transcription library in trane. This requires that the command is run in the
+    // root of the repository.
     let _ = Trane::new_local(&std::env::current_dir()?, &std::env::current_dir()?)?;
+    Ok(())
+}
+
+/// Verifies that a YouTube link refers to a valid video.
+fn verify_youtube_link(link: &str) -> Result<()> {
+    // Use the oembed format to retrieve a small amount of data.
+    let url = format!("https://www.youtube.com/oembed?url={link}&format=json");
+    let res = ureq::get(&url)
+        .set("Example-Header", "header value")
+        .call()?;
+    if res.status() != 200 {
+        bail!("Invalid YouTube link: {}", link);
+    }
+    Ok(())
+}
+
+/// Verifies that all links in the transcription courses are valid.
+fn verify_links() -> Result<()> {
+    // Open the trane-transcription library in trane. This requires that the command is run in the
+    // root of the repository.
+    let trane = Trane::new_local(&std::env::current_dir()?, &std::env::current_dir()?)?;
+
+    // Go through each course and verify that all external links are valid.
+    let courses = trane.get_course_ids();
+    let mut invalid_links = 0;
+    for course_id in courses {
+        let manifest = trane.get_course_manifest(course_id).unwrap();
+        if manifest.generator_config.is_none() {
+            continue;
+        }
+
+        if let CourseGenerator::Transcription(config) = manifest.generator_config.unwrap() {
+            for passages in config.inlined_passages {
+                match passages.asset {
+                    TranscriptionAsset::Track {
+                        short_id,
+                        external_link,
+                        ..
+                    } => {
+                        if let Some(link) = external_link {
+                            match link {
+                                TranscriptionLink::YouTube(yt_link) => {
+                                    let valid = verify_youtube_link(&yt_link);
+                                    if valid.is_err() {
+                                        invalid_links += 1;
+                                        println!(
+                                            "Course {}, asset {} has an invalid YouTube link.",
+                                            course_id, short_id
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if invalid_links == 0 {
+        println!("All courses have valid links.");
+    }
     Ok(())
 }
 
@@ -110,6 +177,9 @@ pub(crate) enum Subcommands {
 
     #[clap(about = "Verify that all transcription courses are valid")]
     VerifyCourses,
+
+    #[clap(about = "Verify that all links in the transcription courses are valid")]
+    VerifyLinks,
 }
 
 impl Subcommands {
@@ -122,6 +192,8 @@ impl Subcommands {
                 Ok(_) => println!("All courses are valid."),
                 Err(e) => eprintln!("Error validating courses: {e}"),
             },
+
+            Subcommands::VerifyLinks => verify_links()?,
         }
         Ok(())
     }
